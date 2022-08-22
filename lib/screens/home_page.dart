@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:my_weather_app/models/location_provider.dart';
 import 'package:my_weather_app/models/weather_model.dart';
-import 'package:my_weather_app/screens/change_location.dart';
 import 'package:my_weather_app/services/weather_api_client.dart';
+import 'package:my_weather_app/widgets/center_additional_info.dart';
+import 'package:my_weather_app/widgets/select_location.dart';
+import 'package:my_weather_app/widgets/top_main_info.dart';
+import 'package:provider/provider.dart';
+import '../generated/l10n.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -14,23 +19,21 @@ class _HomePageState extends State<HomePage> {
   WeatherApiClient client = WeatherApiClient();
   Weather? data;
 
-  void get ssss {}
+  List<String> items = ['en', 'ru'];
+  String? selectedItem = 'en';
 
   Future<void> getData() async {
-    data = await client.getCurrentWeather('Yerevan');
+    data = await client.getCurrentWeather(
+      Provider.of<LocationProvider>(context).location,
+      'metric',
+      S.of(context).language,
+    );
   }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xffa4d9fc),
-        title: const Text(
-          'Weather Application',
-          style: TextStyle(color: Colors.black),
-        ),
-        centerTitle: true,
-      ),
       body: FutureBuilder(
         future: getData(),
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
@@ -40,218 +43,82 @@ class _HomePageState extends State<HomePage> {
 
             return Container(
               height: MediaQuery.of(context).size.height,
-              color: Colors.blue,
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // *** Top Main Temp ***
-                    Padding(
-                      padding: const EdgeInsets.all(32.0),
-                      child: Column(
-                        children: [
-                          Text(
-                            '${data!.cityName}',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 48.0,
-                            ),
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topRight,
+                  end: Alignment.bottomLeft,
+                  colors: [
+                    Color(0xff3593fc),
+                    Color(0xff3b82da),
+                    Color(0xff6f95c4),
+                    Color(0xff515560),
+                    Color(0xff000000),
+                    Color(0xff000000),
+                  ]
+                )
+              ),
+              child: SafeArea(
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                      Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(
+                            right: 16.0,
                           ),
-                          Text(
-                            '${data!.temp?.toInt()} \u2103 ${getWeatherIcon(data!.id!)}',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 32.0,
+                          decoration: const BoxDecoration(
+                            color: Colors.black26,
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(12.0),
+                              bottomRight: Radius.circular(12.0),
                             ),
+
                           ),
-                          // *** Sunrise and Sunset ***
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 8.0,
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.brightness_6_outlined,
-                                  color: Colors.amberAccent,
-                                ),
-                                Text(
-                                  'Sunrise: ${DateTime.fromMillisecondsSinceEpoch(sunrise).hour}:'
-                                  '${DateTime.fromMillisecondsSinceEpoch(sunrise).minute} ',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                                Icon(
-                                  Icons.brightness_4_outlined,
-                                  color: Colors.amber,
-                                ),
-                                Text(
-                                  'Sunset: ${DateTime.fromMillisecondsSinceEpoch(sunset).hour}:'
-                                  '${DateTime.fromMillisecondsSinceEpoch(sunset).minute}',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    // *** Center info ***
-                    Container(
-                      width: MediaQuery.of(context).size.width - 32.0,
-                      height: MediaQuery.of(context).size.height / 3,
-                      decoration: BoxDecoration(
-                        color: const Color(0x6E98BDE0),
-                        borderRadius: BorderRadius.circular(16.0),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 16.0,
-                          horizontal: 16.0,
-                        ),
-                        child: Column(
-                          children: [
-                            // *** top info ***
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                const Text(
-                                  'Weather Description',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    // decoration: TextDecoration.underline,
-                                  ),
-                                ),
-                                const Text(
-                                  ':',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                Text(
-                                  data!.description!.toUpperCase(),
-                                  style: const TextStyle(
+                          width: 50,
+                          height: 50,
+                          child: Center(
+                            child: DropdownButton<String>(
+                              iconSize: 0,
+                              borderRadius: BorderRadius.circular(16.0),
+                              dropdownColor: Colors.black,
+                              value: selectedItem,
+                              items: items
+                                  .map(
+                                    (item) => DropdownMenuItem<String>(
+                                  value: item,
+                                  child: Text(
+                                    item,
+                                    style: const TextStyle(
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.w500,
                                       color: Colors.white,
-                                      fontWeight: FontWeight.w900),
+                                    ),
+                                  ),
                                 ),
-                              ],
+                              )
+                                  .toList(),
+                              onChanged: (item) => setState(() {
+                                selectedItem = item;
+                                S.load(
+                                  Locale('$selectedItem'),
+                                );
+                              }),
                             ),
-                            const Divider(
-                              color: Colors.white,
-                            ),
-                            // *** main info ***
-                            SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  Container(
-                                    width: MediaQuery.of(context).size.width /5,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        const Text(
-                                          'Feels Like',
-                                          textAlign: TextAlign.center,
-                                        ),
-                                        Icon(Icons.nature_people),
-                                        Text(
-                                          '${data!.feelsLike!.toInt()} \u2103',
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    width: MediaQuery.of(context).size.width /5,
-                                    height: MediaQuery.of(context).size.height /5,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        const Text(
-                                          'Feels Like',
-                                          textAlign: TextAlign.center,
-                                        ),
-                                        Icon(Icons.nature_people),
-                                        Text(
-                                          '${data!.feelsLike!.toInt()} \u2103',
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Column(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      const Text(
-                                        'Feels Like',
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      Icon(Icons.nature_people),
-                                      Text(
-                                        '${data!.feelsLike!.toInt()} \u2103',
-                                      ),
-                                    ],
-                                  ),
-                                  Column(
-                                    children: [
-                                      const Text(
-                                        'Wind',
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      const Icon(Icons.all_inclusive),
-                                      Text(
-                                        '${data!.wind} km/h',
-                                      ),
-                                    ],
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      const Text(
-                                        'Humidity',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(),
-                                      ),
-                                      const Icon(Icons.invert_colors),
-                                      Text(
-                                        '${data!.humidity}%',
-                                      ),
-                                    ],
-                                  ),
-                                  Column(
-                                    children: [
-                                      const Text(
-                                        'Pressure',
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      const Icon(Icons.vertical_align_center),
-                                      Text(
-                                        '${data!.pressure} mb',
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
-                      ),
+                      ],
                     ),
-                    const ChangeLocation(),
-                  ],
+                        topMainInfo(context, data!, sunrise, sunset),
+                        centerAdditionalInfo(context, data, sunrise, sunset),
+                        selectLocation(context, Weather()),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             );
@@ -259,10 +126,21 @@ class _HomePageState extends State<HomePage> {
             return const Center(
               child: CircularProgressIndicator(),
             );
+          } else {
+            return Container();
           }
-          return Container();
         },
       ),
     );
   }
 }
+// data?.cityName = '--';
+// data?.id = 0;
+// data?.temp = 0.0;
+// data?.feelsLike = 0.0;
+// data?.wind = 0.0;
+// data?.humidity = 0;
+// data?.pressure = 0;
+// data?.description = '--';
+// data?.sunset = 0;
+// data?.sunrise = 0;

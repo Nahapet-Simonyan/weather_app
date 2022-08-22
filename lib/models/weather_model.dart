@@ -1,26 +1,28 @@
 class Weather {
-  String? cityName;
+  String? cityName = '--';
   int? id;
-  double? temp;
-  double? wind;
+  dynamic temp;
+  dynamic wind;
   int? humidity;
-  double? feelsLike;
+  dynamic feelsLike;
   int? pressure;
   int? sunrise;
   int? sunset;
   String? description;
+  dynamic icon;
 
   Weather({
-    this.cityName,
-    this.id,
-    this.temp,
-    this.wind,
-    this.humidity,
-    this.feelsLike,
-    this.pressure,
-    this.sunrise,
-    this.sunset,
-    this.description,
+    this.cityName = '--',
+    this.id = 0,
+    this.temp = 0,
+    this.wind = 0,
+    this.humidity = 0,
+    this.feelsLike = 0.0,
+    this.pressure = 0,
+    this.sunrise = 0,
+    this.sunset = 0,
+    this.description = '--',
+    this.icon,
   });
 
   Weather.fromJson(Map<String, dynamic> json) {
@@ -34,6 +36,8 @@ class Weather {
     sunrise = json['sys']['sunrise'];
     sunset = json['sys']['sunset'];
     description = json['weather'][0]['description'];
+    icon = json['weather'][0]['icon'];
+
   }
 }
 

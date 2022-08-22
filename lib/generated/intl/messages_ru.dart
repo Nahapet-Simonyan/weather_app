@@ -21,5 +21,18 @@ class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'ru';
 
   final messages = _notInlinedMessages(_notInlinedMessages);
-  static Map<String, Function> _notInlinedMessages(_) => <String, Function>{};
+  static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "changeLocation":
+            MessageLookupByLibrary.simpleMessage("Изменить Локацию"),
+        "feelsLike": MessageLookupByLibrary.simpleMessage("Ощущается как"),
+        "humidity": MessageLookupByLibrary.simpleMessage("Влажность"),
+        "language": MessageLookupByLibrary.simpleMessage("ru"),
+        "pressure": MessageLookupByLibrary.simpleMessage("Давление"),
+        "speed_km_h": MessageLookupByLibrary.simpleMessage("Км/ч"),
+        "sunrise": MessageLookupByLibrary.simpleMessage("Восход солнца"),
+        "sunset": MessageLookupByLibrary.simpleMessage("Заход солнца"),
+        "weatherDescription":
+            MessageLookupByLibrary.simpleMessage("Описание погоды"),
+        "wind": MessageLookupByLibrary.simpleMessage("Ветер")
+      };
 }

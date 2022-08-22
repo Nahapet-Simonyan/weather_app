@@ -49,6 +49,106 @@ class S {
   static S? maybeOf(BuildContext context) {
     return Localizations.of<S>(context, S);
   }
+
+  /// `en`
+  String get language {
+    return Intl.message(
+      'en',
+      name: 'language',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Weather Description`
+  String get weatherDescription {
+    return Intl.message(
+      'Weather Description',
+      name: 'weatherDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Feels Like`
+  String get feelsLike {
+    return Intl.message(
+      'Feels Like',
+      name: 'feelsLike',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Wind`
+  String get wind {
+    return Intl.message(
+      'Wind',
+      name: 'wind',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Humidity`
+  String get humidity {
+    return Intl.message(
+      'Humidity',
+      name: 'humidity',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pressure`
+  String get pressure {
+    return Intl.message(
+      'Pressure',
+      name: 'pressure',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `km/h`
+  String get speed_km_h {
+    return Intl.message(
+      'km/h',
+      name: 'speed_km_h',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sunrise`
+  String get sunrise {
+    return Intl.message(
+      'Sunrise',
+      name: 'sunrise',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sunset`
+  String get sunset {
+    return Intl.message(
+      'Sunset',
+      name: 'sunset',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Change Location`
+  String get changeLocation {
+    return Intl.message(
+      'Change Location',
+      name: 'changeLocation',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
